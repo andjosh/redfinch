@@ -1,5 +1,5 @@
 /**
-  * Reviews
+  * RedFinch
   *
   * @author Joshua Beckman <@jbckmn> || <jsh@bckmn.com>
   * @license The MIT license. 2013
@@ -74,7 +74,13 @@ function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
   res.redirect('/login')
 }
+function ensureApiAuth(req, res, next) {
+  Account.findOne({key:req.params.key}).lean().exec(function(error,authAccount){
+    if (authAccount) { return next(authAccount); }
+    res.redirect('/login')
+  })
+}
 
-require('./routes/frontEnd')(app, ensureAuthenticated);
-require('./routes/api')(app);
+require('./routes/frontEnd')(app, ensureAuthenticated, io);
+require('./routes/api')(app, io, ensureApiAuth);
 

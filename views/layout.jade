@@ -2,6 +2,19 @@ doctype 5
 html
   head
     title= title
+    <meta name="description" content="Everyone has an opinion." />
+    <meta name="viewport" content="width=device-width" />
     link(rel='stylesheet', href='/stylesheets/style.css')
+    if user
+      meta(name="uid", content="#{user._id}")
   body
+    if message.length > 0
+      p#message.pull-center.message #{message}
+    if error.length > 0
+      p#error.pull-center.error #{error}
+
     block content
+
+    footer.footer
+
+    script(src='/socket.io/socket.io.js')
