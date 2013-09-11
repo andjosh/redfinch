@@ -68,7 +68,7 @@ mongoose.connect(mongoUri);
 server.listen(app.get('port'));
 
 // Let's see what's going on
-console.log("Express server listening on port %d in %s mode", app.get('port'), app.settings.env);
+console.log("Express server listening on port %d in %s mode, connected to %s", app.get('port'), app.settings.env, mongoUri);
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
@@ -85,3 +85,11 @@ function ensureApiAuth(req, res, next) {
 require('./routes/frontEnd')(app, ensureAuthenticated, io);
 require('./routes/api')(app, io, ensureApiAuth);
 
+app.configure('development', function(){
+  var repl = require('repl').start('> ');
+  repl.context.Account = Account;
+  repl.context.Subject = require('./models/subject');
+  repl.context.Plan = require('./models/plan');
+  repl.context.Review = require('./models/review');
+  repl.context.io = io;
+})
