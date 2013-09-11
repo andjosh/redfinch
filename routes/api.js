@@ -23,9 +23,11 @@ var Account = require('../models/account')
     , Plan = require('../models/plan')
     , Review = require('../models/review')
     , Subject = require('../models/subject');
-var error404 = {"error":{"code":404,"message":"No finches found by that identifier."}};
+var error404 = {"error":{"code":404,"message":"No finches found by that identifier."}},
+    error400 = {"error":{"code":400,"message":"RedFinch doesn't understand what you mean."}};
 
 module.exports = function (app, io, ensureApiAuth) {
+
   app.get('/dummy/subject', function(req, res) {
     var Chance = require('chance');
     var chance = new Chance();
@@ -74,4 +76,5 @@ module.exports = function (app, io, ensureApiAuth) {
       }
     })
   });
+
 }

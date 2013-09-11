@@ -5,6 +5,7 @@ html
     <meta name="description" content="Everyone has an opinion." />
     <meta name="viewport" content="width=device-width" />
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='icon', href="images/favicon.png")
     if user
       meta(name="uid", content="#{user._id}")
   body
@@ -12,6 +13,25 @@ html
       p#message.pull-center.message #{message}
     if error.length > 0
       p#error.pull-center.error #{error}
+    .pure-g-r
+      .pure-u-1-2
+        .pure-menu.pure-menu-open.pure-menu-horizontal
+          ul.otherly
+            li
+              a.brand-nav(href="/") RedFinch
+                span.rf(data-icon="&#xe000;", aria-hidden="true")
+            if user
+              li
+                a(href="/account") Account
+            if (!user)
+              li
+                a(href="/sign-in") Sign In
+            if user
+              li
+                a(href="/sign-out") Sign Out
+            if (!user)
+              li
+                a(href="/about") About
 
     block content
 
