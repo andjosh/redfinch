@@ -72,12 +72,13 @@ console.log("Express server listening on port %d in %s mode", app.get('port'), a
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login')
+  req.flash('error', 'Please sign in.')
+  res.redirect('/sign-in')
 }
 function ensureApiAuth(req, res, next) {
   Account.findOne({key:req.params.key}).lean().exec(function(error,authAccount){
     if (authAccount) { return next(authAccount); }
-    res.redirect('/login')
+    res.redirect('/sign-in')
   })
 }
 

@@ -23,7 +23,7 @@ var Account = require('../models/account')
     , Plan = require('../models/plan')
     , Review = require('../models/review')
     , Subject = require('../models/subject');
-var error404 = {"error":{"code":404,"message":"No finches found by that identifier."}},
+var error404 = {"error":{"code":404,"message":"Nothing found by that identifier."}},
     error400 = {"error":{"code":400,"message":"RedFinch doesn't understand what you mean."}};
 
 module.exports = function (app, io, ensureApiAuth) {
@@ -59,7 +59,7 @@ module.exports = function (app, io, ensureApiAuth) {
       })
     })
   });
-  app.get('/api/:key/finches/:id', ensureApiAuth, function(req, res) {
+  app.get('/api/:key/subjects/:id', ensureApiAuth, function(req, res) {
     Subject.findOne({_id:req.params.id}).lean().exec(function(err, subject){
       if (!subject){
         res.writeHead(404, { 'Content-Type': 'application/json' });

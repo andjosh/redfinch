@@ -23,13 +23,11 @@ html
             if user
               li
                 a(href="/account") Account
-            if (!user)
-              li
-                a(href="/sign-in") Sign In
-            if user
               li
                 a(href="/sign-out") Sign Out
             if (!user)
+              li
+                a(href="/sign-in") Sign In/Register
               li
                 a(href="/about") About
 
