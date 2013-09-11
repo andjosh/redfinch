@@ -77,7 +77,7 @@ function ensureAuthenticated(req, res, next) {
 }
 function ensureApiAuth(req, res, next) {
   Account.findOne({key:req.params.key}).lean().exec(function(error,authAccount){
-    if (authAccount) { return next(authAccount); }
+    if (authAccount) { return next(); }
     res.redirect('/sign-in')
   })
 }

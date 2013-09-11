@@ -20,6 +20,7 @@ var Subject = new Schema({
     password: {type: String},
     approvedHosts: {type: String},
     image: {type: String, default: ''},
+    accountId: {type: String, required: true},
     discoverable: {type: Boolean, default: false}
 });
 Subject.plugin(createdModifiedPlugin, {index: true});

@@ -31,50 +31,76 @@ module.exports = function (app, io, ensureApiAuth) {
   app.get('/dummy/subject', function(req, res) {
     var Chance = require('chance');
     var chance = new Chance();
-    var newSubject = new Subject();
-    newSubject.name = chance.name();
-    newSubject.description = chance.paragraph();
-    newSubject.email = chance.email();
-    newSubject.link = chance.domain();
-    newSubject.password = chance.word();
-    newSubject.save(function(err,resultSubject){
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.write(JSON.stringify(resultSubject));
-      res.end();
+    Account.findOne().lean().exec(function(err,account){
+      var newSubject = new Subject();
+      newSubject.accountId = account._id;
+      newSubject.name = chance.name();
+      newSubject.description = chance.paragraph();
+      newSubject.email = chance.email();
+      newSubject.link = chance.domain();
+      newSubject.password = chance.word();
+      newSubject.save(function(err,resultSubject){
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify(resultSubject));
+        res.end();
+      })
     })
   });
   app.get('/dummy/review', function(req, res) {
     var Chance = require('chance');
     var chance = new Chance();
-    Subject.findOne().lean().exec(function(err, subject){
-      var newReview = new Review();
-      newReview.subjectId = subject._id;
-      newReview.content = chance.paragraph();
-      newReview.title = chance.string();
-      newReview.rating = chance.floating({min: 0, max: 10});
-      newReview.save(function(err,resultReview){
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.write(JSON.stringify(resultReview));
-        res.end();
+    Account.findOne().lean().exec(function(err,account){
+      Subject.findOne().lean().exec(function(err, subject){
+        var newReview = new Review();
+        newReview.subjectId = subject._id;
+        newReview.reviewerId = account._id;
+        newReview.content = chance.paragraph();
+        newReview.title = chance.string();
+        newReview.rating = chance.floating({min: 0, max: 10});
+        newReview.save(function(err,resultReview){
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.write(JSON.stringify(resultReview));
+          res.end();
+        })
       })
     })
   });
   app.get('/api/:key/subjects/:id', ensureApiAuth, function(req, res) {
-    Subject.findOne({_id:req.params.id}).lean().exec(function(err, subject){
+    Subject.findOne({_id:req.params.id}, '-__v').lean().exec(function(err, subject){
       if (!subject){
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.write(JSON.stringify(error404));
         res.end();
       }
       else {
-        Review.find({subjectId:subject._id}).lean().exec(function(er, reviews){
+        Review.find({subjectId:subject._id}, '-__v').lean().exec(function(er, reviews){
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.write(subject);
-          res.write(reviews);
+          var response = {'subject':subject, 'reviews':reviews};
+          res.write(JSON.stringify(response));
           res.end();
         })
       }
     })
   });
+  app.put('/api/:key/subjects/:id', ensureApiAuth, function(req, res) {
 
+  });
+  app.get('/api/:key/subjects/search/:stringSearch', ensureApiAuth, function(req, res) {
+
+  });
+  app.post('/api/:key/subjects/:id/reviews', ensureApiAuth, function(req, res) {
+
+  });
+  app.get('/api/:key/reviews/:id', ensureApiAuth, function(req, res) {
+
+  });
+  app.put('/api/:key/reviews/:id', ensureApiAuth, function(req, res) {
+
+  });
+  app.post('/api/:key/accounts', ensureApiAuth, function(req, res) {
+
+  });
+  app.get('/api/:key/accounts/:id', ensureApiAuth, function(req, res) {
+
+  });
 }

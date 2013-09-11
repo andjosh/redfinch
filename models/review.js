@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
 var Review = new Schema({
     content: {type: String, default: '', required: true},
     title: {type: String},
-    reviewerId: {type: String},
+    reviewerId: {type: String, required: true},
     subjectId: {type: String, required: true},
     link: {type: String},
     rating: {type: Number, default: 0.0, min: 0.0, max: 10.0},
