@@ -1,4 +1,3 @@
-
 /*
  * API Routes
 
@@ -24,6 +23,7 @@ var Account = require('../models/account')
     , Plan = require('../models/plan')
     , Review = require('../models/review')
     , Subject = require('../models/subject');
+var error404 = {"error":{"code":404,"message":"No finches found by that identifier."}};
 
 module.exports = function (app, io, ensureApiAuth) {
   app.get('/dummy/subject', function(req, res) {
@@ -61,7 +61,7 @@ module.exports = function (app, io, ensureApiAuth) {
     Subject.findOne({_id:req.params.id}).lean().exec(function(err, subject){
       if (!subject){
         res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.write('{"error":{"type":404, "message":"No finches found by that identifier."}}');
+        res.write(JSON.stringify(error404));
         res.end();
       }
       else {

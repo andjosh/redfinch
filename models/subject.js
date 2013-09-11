@@ -7,10 +7,10 @@ var mongoose = require('mongoose'),
     createdModifiedPlugin = require('mongoose-createdmodified').createdModifiedPlugin;
 
 var Subject = new Schema({
-    name: {type: String, default: ''},
+    name: {type: String, default: '', required: true},
     description: {type: String},
     planId: {type: String},
-    email: {type: String},
+    email: {type: String, required: true},
     link: {type: String},
     phone: {type: String},
     streetAddress: {type: String},
