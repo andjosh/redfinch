@@ -22,7 +22,7 @@ input[type="button"], input[type="submit"], .btn, button{
   /*#402cf3*/
   color: #111;
   padding: 0.3em 1em;
-  border-radius: 5px;
+  border-radius: 3px;
   cursor: pointer;
   transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
 }
@@ -74,19 +74,19 @@ code {background-color:#eee;padding:0.4em 0.6em;}
   font-size: 1.2em;
 }
 @font-face {
-  font-family: 'redfinch';
-  src:url('fonts/redfinch.eot');
-  src:url('fonts/redfinch.eot?#iefix') format('embedded-opentype'),
-    url('fonts/redfinch.woff') format('woff'),
-    url('fonts/redfinch.ttf') format('truetype'),
-    url('fonts/redfinch.svg#redfinch') format('svg');
+  font-family: 'icomoon';
+  src:url('fonts/icomoon.eot');
+  src:url('fonts/icomoon.eot?#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.woff') format('woff'),
+    url('fonts/icomoon.ttf') format('truetype'),
+    url('fonts/icomoon.svg#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 /* Use the following CSS code if you want to use data attributes for inserting your icons */
 [data-icon]:before {
-  font-family: 'redfinch';
+  font-family: 'icomoon';
   content: attr(data-icon);
   speak: none;
   font-weight: normal;
@@ -101,12 +101,10 @@ code {background-color:#eee;padding:0.4em 0.6em;}
 /*
 Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
-[class*="rf-"] {
-  document.getElementsByTagName('legend')[0].innerHTML += '<span class="pulse-ring"></span>';
-
+[class*="icon-"] {
 */
-.rf {
-  font-family: 'redfinch';
+.icon-redfeather, .icon-redfeathers {
+  font-family: 'icomoon';
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -115,9 +113,13 @@ you can use the generic selector below, but it's slower:
   line-height: 1;
   -webkit-font-smoothing: antialiased;
 }
-.rf:before {
+.icon-redfeather:before {
   content: "\e000";
 }
+.icon-redfeathers:before {
+  content: "\e001";
+}
+
 .pulse-ring {
     border: 3px solid rgba(255,69,54,0.75);
     -webkit-border-radius: 30px;

@@ -7,7 +7,7 @@ var passport = require('passport'),
 
 module.exports = function (app, ensureAuthenticated) {
   app.get('/', function(req, res) {
-    res.render('index', { title: 'RedFinch', user: req.user, message: req.flash('message'), error: req.flash('error') });
+    res.render('index', { title: 'RedFeather', user: req.user, message: req.flash('message'), error: req.flash('error') });
   });
   app.get('/register', function(req, res) {
     res.render('register', { title: 'Register', user: req.user, message: req.flash('message'), error: req.flash('error') });
@@ -24,12 +24,12 @@ module.exports = function (app, ensureAuthenticated) {
         }
         var name = req.body.username.match(/^[^@]*/)
         // Welcome email
-        // mg.sendText('nest@redfinch.io', [req.body.email],
-        //   'Welcome to RedFinch!','Hi '+name+'! '+
-        //   'Congratulations on joining RedFinch! '+
+        // mg.sendText('nest@RedFeather.io', [req.body.email],
+        //   'Welcome to RedFeather!','Hi '+name+'! '+
+        //   'Congratulations on joining RedFeather! '+
         //   'Thanks! '+
-        //   '- Josh, redfinch.io',
-        //   'redfinch.mailgun.org', {},
+        //   '- Josh, RedFeather.io',
+        //   'RedFeather.mailgun.org', {},
         //   function(err) {
         //     if (err) console.log('Oh noes: ' + err);
         //     else     console.log('Successful welcome email');

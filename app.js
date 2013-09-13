@@ -1,5 +1,5 @@
 /**
-  * RedFinch
+  * RedFeather
   *
   * @author Joshua Beckman <@jbckmn> || <jsh@bckmn.com>
   * @license The MIT license. 2013
@@ -72,13 +72,16 @@ console.log("Express server listening on port %d in %s mode, connected to %s", a
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-  req.flash('error', 'Please sign in.')
-  res.redirect('/sign-in')
+  req.flash('error', 'Please sign in.');
+  res.redirect('/sign-in');
 }
 function ensureApiAuth(req, res, next) {
-  Account.findOne({key:req.params.key}).lean().exec(function(error,authAccount){
-    if (authAccount) { return next(); }
-    res.redirect('/sign-in')
+  Account.findOne({key:req.query.key}).lean().exec(function(error,authAccount){
+    if (authAccount || req.user) { return next(); }
+    var error405 = {"error":{"code":405,"message":"Not allowed. You can't always get what you want."}};
+    res.writeHead(405, { 'Content-Type': 'application/json' });
+    res.write(JSON.stringify(error405));
+    res.end();
   })
 }
 

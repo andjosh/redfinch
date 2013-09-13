@@ -1,11 +1,12 @@
 extends layout
 
 block content
-
-  p Ever seen a #{title}?
-  h3 Dummies
-  ul
-    li
-      a(href="/dummy/subject") Subject
-    li
-      a(href="/dummy/review") Review
+  if !user
+    p Ever seen a #{title}?
+  if user
+    h3 Play dumb
+    ul
+      li
+        a(href="/dummy/subject") Subject
+      li
+        a(href="/dummy/review") Review
