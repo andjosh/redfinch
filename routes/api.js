@@ -107,7 +107,18 @@ module.exports = function (app, io, ensureApiAuth) {
     });
   });
   app.get('/api/reviews/:id', ensureApiAuth, function(req, res) {
-
+    Review.findOne({_id:req.params.id}, '-__v').lean().exec(function(err, review){
+      if (!review){
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify(error404));
+        res.end();
+      }
+      else {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify(review));
+        res.end();
+      }
+    })
   });
   app.put('/api/reviews/:id', ensureApiAuth, function(req, res) {
     var conditions = { utilityRating: req.body.utilityRating, content: req.body.reviewContent, title: req.body.reviewTitle };
@@ -124,9 +135,50 @@ module.exports = function (app, io, ensureApiAuth) {
     });
   });
   app.post('/api/accounts', ensureApiAuth, function(req, res) {
-
+    if (req.body.password != req.body.password_conf) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.write(JSON.stringify(error400));
+      res.end();
+    }
+    Account.register(new Account({ email : req.body.username, username: req.body.username.match(/^[^@]*/) }), req.body.password, function(err, account) {
+        if (err) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.write(JSON.stringify(error400));
+            res.end();
+        }
+        var name = req.body.username.match(/^[^@]*/)
+        // Welcome email
+        // mg.sendText('nest@RedFeather.io', [req.body.email],
+        //   'Welcome to RedFeather!','Hi '+name+'! '+
+        //   'Congratulations on joining RedFeather! '+
+        //   'Thanks! '+
+        //   '- Josh, RedFeather.io',
+        //   'RedFeather.mailgun.org', {},
+        //   function(err) {
+        //     if (err) console.log('Oh noes: ' + err);
+        //     else     console.log('Successful welcome email');
+        // });
+        // Then respond
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify(account));
+        res.end();
+    });
   });
   app.get('/api/accounts/:id', ensureApiAuth, function(req, res) {
-
+    Account.findOne({_id:req.params.id}, '-__v -fullAccess -admin -hash -salt').lean().exec(function(err, account){
+      if (!account){
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify(error404));
+        res.end();
+      }
+      else {
+        Review.find({reviewerId:account._id}, '-__v -reviewerId').lean().exec(function(er, reviews){
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          var response = {'account':account, 'reviews':reviews};
+          res.write(JSON.stringify(response));
+          res.end();
+        })
+      }
+    })
   });
 }
