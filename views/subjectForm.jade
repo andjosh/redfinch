@@ -1,0 +1,66 @@
+form(action="#{ subject ? '/subject/'+subject._id : '/subject/new'", method="post").pure-form.pure-form-aligned
+  legend #{title}
+  fieldset
+    .pure-control-group
+      label(for="name") Name
+      input(type="text", name="name", placeholder="Name", autofocus="autofocus", value="#{subject ? subject.name : ''}")
+    .pure-control-group
+      label(for="description") Description
+      textarea(type="text", name="description", placeholder="Description", value="#{subject ? subject.description || '' : ''}")
+    .pure-control-group
+      label(for="industry") Industry
+      select(name="industry")
+        option Unselected
+        for item in industries
+          if subject && subject.industry == item
+            option(selected="true") #{item}
+          else
+            option #{item}
+    .pure-control-group
+      label(for="plan") Plan
+      select(name="plan")
+        for item in plans
+          if subject && subject.planId == item._id
+            option(selected="true", value="#{item._id") #{item}
+          else
+            option(value="#{item._id") #{item}
+    
+    p Contact info
+    .pure-control-group
+      label(for="email") Email
+      input(type="email", name="email", placeholder="Email", value="#{subject ? subject.email : user.email}")
+    .pure-control-group
+      label(for="link") Link
+      input(type="url", name="link", placeholder="http://", value="#{subject ? subject.link : ''}")
+    .pure-control-group
+      label(for="phone") Phone
+      input(type="text", name="phone", placeholder="##########", value="#{subject ? subject.phone || '' : ''}")
+    .pure-control-group
+      label(for="streetAddress") Street Address
+      input(type="text", name="streetAddress", placeholder="Address", value="#{subject ? subject.streetAddress || '' : ''}")
+    .pure-control-group
+      label(for="city") City
+      input(type="text", name="city", placeholder="City", value="#{subject ? subject.city || '' : ''}")
+    .pure-control-group
+      label(for="postalCode") Postal Code
+      input(type="number", name="postalCode", placeholder="######", value="#{subject ? subject.postalCode || '' : ''}")
+    .pure-control-group
+      label(for="state") State
+      input(type="text", name="state", placeholder="State", value="#{subject ? subject.state || '' : ''}")
+
+    p Embed details
+    .pure-control-group
+      label(for="approvedHosts") Approved Hosts <br>
+        small (separate each with a space)
+      textarea(type="text", name="approvedHosts", placeholder="http://example.com", value="#{subject ? subject.approvedHosts || '' : ''}")
+    .pure-control-group
+      label(for="discoverable") Discoverable?
+      input(type="checkbox", name="discoverable", checked="#{subject ? subject.discoverable || '' : ''}")
+    .pure-control-group
+      label(for="password") Password for reviewers
+      input(type="password", name="password", placeholder="Password", value="#{subject ? subject.password : ''}")
+    .pure-control-group
+      label(for="password") Confirm password
+      input(type="password", name="password_conf", placeholder="Confirm password", value="#{subject ? subject.password : ''}")
+    .pure-controls
+      input(type="submit", value="#{title}")

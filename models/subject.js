@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
 var Subject = new Schema({
     name: {type: String, default: '', required: true},
     description: {type: String},
-    planId: {type: String},
+    planId: {type: String, required: true},
     email: {type: String, required: true},
     link: {type: String},
     phone: {type: String},
@@ -18,10 +18,12 @@ var Subject = new Schema({
     state: {type: String},
     country: {type: String, default: 'United States'},
     password: {type: String},
-    approvedHosts: {type: String},
+    approvedHosts: [String],
     image: {type: String, default: ''},
     accountId: {type: String, required: true},
-    discoverable: {type: Boolean, default: false}
+    discoverable: {type: Boolean, default: false},
+    industry: {type: String, required: true}
 });
 Subject.plugin(createdModifiedPlugin, {index: true});
+Subject.statics.industries = ['Photography', 'Design', 'Internet']
 module.exports = mongoose.model('Subject', Subject);

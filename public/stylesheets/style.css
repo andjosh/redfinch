@@ -39,7 +39,7 @@ input[type="button"]:hover, .btn:hover, button:hover{
   background-color: rgba(64,44,243,0.2);
   border: none;
 }
-code {background-color:#eee;padding:0.4em 0.6em;}
+code {background-color:#eee;padding:0.4em 0.6em;line-height: 2.5em;}
 /*Nav bar*/
 .pure-menu ul li a{
   color: #222;

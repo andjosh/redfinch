@@ -33,6 +33,7 @@ module.exports = function (app, io, ensureApiAuth) {
     var Chance = require('chance');
     var chance = new Chance();
     Account.findOne().lean().exec(function(err,account){
+      console.log('found account')
       var newSubject = new Subject();
       newSubject.accountId = account._id;
       newSubject.name = chance.name();
@@ -84,10 +85,37 @@ module.exports = function (app, io, ensureApiAuth) {
     })
   });
   app.put('/api/subjects/:id', ensureApiAuth, function(req, res) {
+    var conditions = { 
+      description: req.body.description, 
+      name: req.body.name, 
+      planId: req.body.planId,
+      email: req.body.email,
+      link: req.body.link,
+      phone: req.body.phone,
+      streetAddress: req.body.streetAddress,
+      postalCode: req.body.postalCode,
+      state: req.body.state,
+      country: req.body.country,
+      password: req.body.password,
+      approvedHosts: req.body.approvedHosts,
+      image: req.body.image,
+      discoverable: req.body.discoverable
+    };
+    Subject.update({ _id: req.params.id}, conditions, function upDated(err) {
+      if(err) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify(error400));
+        res.end();
+        throw err;
+      }
+      res.writeHead(204, { 'Content-Type': 'application/json' });
+      res.write(JSON.stringify(updated204));
+      res.end();
+    });
 
   });
-  app.get('/api/subjects/?search=:stringSearch', ensureApiAuth, function(req, res) {
-
+  app.get('/api/subjectSearch', ensureApiAuth, function(req, res) {
+    // To do
   });
   app.post('/api/subjects/:id/reviews', ensureApiAuth, function(req, res) {
     Subject.findOne({_id:req.params.id}, '-__v -password').lean().exec(function(err, subject){
@@ -100,6 +128,12 @@ module.exports = function (app, io, ensureApiAuth) {
       newReview.link = req.body.reviewLink;
       newReview.dateOfService = req.body.reviewDate;
       newReview.save(function(err,resultReview){
+        if(err) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.write(JSON.stringify(error400));
+          res.end();
+          throw err;
+        }
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.write(JSON.stringify(resultReview));
         res.end();
@@ -121,7 +155,11 @@ module.exports = function (app, io, ensureApiAuth) {
     })
   });
   app.put('/api/reviews/:id', ensureApiAuth, function(req, res) {
-    var conditions = { utilityRating: req.body.utilityRating, content: req.body.reviewContent, title: req.body.reviewTitle };
+    var conditions = { 
+      utilityRating: req.body.utilityRating, 
+      content: req.body.reviewContent, 
+      title: req.body.reviewTitle 
+    };
     Review.update({ _id: req.params.id}, conditions, function upDated(err) {
       if(err) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -165,7 +203,7 @@ module.exports = function (app, io, ensureApiAuth) {
     });
   });
   app.get('/api/accounts/:id', ensureApiAuth, function(req, res) {
-    Account.findOne({_id:req.params.id}, '-__v -fullAccess -admin -hash -salt').lean().exec(function(err, account){
+    Account.findOne({_id:req.params.id}, '-__v -fullAccess -admin -hash -salt -key -modified -email').lean().exec(function(err, account){
       if (!account){
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.write(JSON.stringify(error404));

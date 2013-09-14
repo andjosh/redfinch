@@ -3,7 +3,10 @@
  * Front End routes
  */
 var passport = require('passport'),
-    Account = require('../models/account');
+    Account = require('../models/account')
+    , Plan = require('../models/plan')
+    , Review = require('../models/review')
+    , Subject = require('../models/subject');
 
 module.exports = function (app, ensureAuthenticated) {
   app.get('/', function(req, res) {
@@ -56,6 +59,27 @@ module.exports = function (app, ensureAuthenticated) {
   });
 
   app.get('/account', ensureAuthenticated, function(req, res){
-    res.render('account', { user: req.user, title : "Your Nest", message: req.flash('message'), error: req.flash('error') });
+    Subject.find({accountId:req.user._id}, '-__v -password').lean().exec(function(err, subjects){
+      Review.find({reviewerId:req.user._id}, '').lean().exec(function(err, reviews){
+        res.render('account', { user: req.user, title : "Your Nest", subjects: subjects, reviews: reviews, message: req.flash('message'), error: req.flash('error') });
+      });
+    });
+  });
+  app.get('/subject/new', ensureAuthenticated, function(req, res){
+    Plan.find().lean().exec(function(err,plans){
+      var industries = Subject.industries;
+      res.render('subjectNew', { user: req.user, title : "New Subject", plans: plans, industries: industries, message: req.flash('message'), error: req.flash('error') });
+    });
+  });
+  app.get('/subject/:id/edit', ensureAuthenticated, function(req, res){
+    Subject.findOne({_id:req.params.id}, '-__v -password').lean().exec(function(err, subject){
+      Plan.find().lean().exec(function(err,plans){
+        var industries = Subject.industries;
+        res.render('subjectEdit', { user: req.user, title : "Edit "+subject.name, plans: plans, subject: subject, industries: industries, message: req.flash('message'), error: req.flash('error') });
+      })
+    });
+  });
+  app.get('/subject/:id', ensureAuthenticated, function(req, res){
+    res.render('subject', { user: req.user, title : subject.name, subject: subject, message: req.flash('message'), error: req.flash('error') });
   });
 }
