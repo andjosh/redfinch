@@ -42,9 +42,7 @@ module.exports = function (app, io, ensureApiAuth) {
       newSubject.link = chance.domain();
       newSubject.password = chance.word();
       newSubject.save(function(err,resultSubject){
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.write(JSON.stringify(resultSubject));
-        res.end();
+        res.jsonp(resultSubject);
       })
     })
   });
@@ -60,9 +58,7 @@ module.exports = function (app, io, ensureApiAuth) {
         newReview.title = chance.string();
         newReview.rating = chance.floating({min: 0, max: 10});
         newReview.save(function(err,resultReview){
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.write(JSON.stringify(resultReview));
-          res.end();
+          res.jsonp(resultReview);
         })
       })
     })
@@ -76,10 +72,8 @@ module.exports = function (app, io, ensureApiAuth) {
       }
       else {
         Review.find({subjectId:subject._id}, '-__v -subjectId').lean().exec(function(er, reviews){
-          res.writeHead(200, { 'Content-Type': 'application/json' });
           var response = {'subject':subject, 'reviews':reviews};
-          res.write(JSON.stringify(response));
-          res.end();
+          res.jsonp(response);
         })
       }
     })
@@ -134,9 +128,7 @@ module.exports = function (app, io, ensureApiAuth) {
           res.end();
           throw err;
         }
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.write(JSON.stringify(resultReview));
-        res.end();
+        res.jsonp(resultReview);
       });
     });
   });
@@ -148,9 +140,7 @@ module.exports = function (app, io, ensureApiAuth) {
         res.end();
       }
       else {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.write(JSON.stringify(review));
-        res.end();
+        res.jsonp(review);
       }
     })
   });
@@ -183,6 +173,7 @@ module.exports = function (app, io, ensureApiAuth) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
             res.write(JSON.stringify(error400));
             res.end();
+            console.log(err)
         }
         var name = req.body.username.match(/^[^@]*/)
         // Welcome email
@@ -197,9 +188,7 @@ module.exports = function (app, io, ensureApiAuth) {
         //     else     console.log('Successful welcome email');
         // });
         // Then respond
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.write(JSON.stringify(account));
-        res.end();
+        res.jsonp(account);
     });
   });
   app.get('/api/accounts/:id', ensureApiAuth, function(req, res) {
@@ -211,10 +200,8 @@ module.exports = function (app, io, ensureApiAuth) {
       }
       else {
         Review.find({reviewerId:account._id}, '-__v -reviewerId').lean().exec(function(er, reviews){
-          res.writeHead(200, { 'Content-Type': 'application/json' });
           var response = {'account':account, 'reviews':reviews};
-          res.write(JSON.stringify(response));
-          res.end();
+          res.jsonp(response);
         })
       }
     })
